@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Input(props) {
-  const { type, name, id, labelText, placeholder, testID, onChange } = props;
+  const { type, name, id, labelText, placeholder, testID, onChange, value } = props;
   return (
     <label
       htmlFor={ id }
@@ -15,6 +15,7 @@ function Input(props) {
         placeholder={ placeholder }
         data-testid={ testID }
         onChange={ onChange }
+        value={ value }
       />
     </label>
   );
@@ -30,6 +31,7 @@ Input.propTypes = {
   placeholder: string,
   testID: string,
   onChange: func,
+  value: string,
 }.isRequired;
 
 export default Input;
