@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
+// import fetchActions from '../redux/actions/fetchActions';
 
 class Login extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class Login extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.fetchTokenApi = this.fetchTokenApi.bind(this);
     this.handleClick = this.handleClick.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -42,9 +44,20 @@ class Login extends React.Component {
     }
   }
 
-  handleClick() {
-    const { disable } = this.state;
+  saveTokenOnLocalStorage(token) {
+    localStorage.setItem('token', JSON.stringify(token));
+  }
 
+  async fetchTokenApi() {
+    const fetchAppi = await fetch('https://opentdb.com/api_token.php?command=request');
+    const jsonFetch = await fetchAppi.json();
+    const { token } = await jsonFetch;
+    this.saveTokenOnLocalStorage(token);
+  }
+
+  async handleClick() {
+    const { disable } = this.state;
+    this.fetchTokenApi();
     if (!disable) {
       this.setState({
         redirect: true,
@@ -100,4 +113,9 @@ class Login extends React.Component {
   }
 }
 
+// const mapDispatchToProps = (dispatch) => ({
+//   initFetchApi: () => dispatch(fetchActions()),
+// });
+
 export default Login;
+// export default connect(null, mapDispatchToProps)(Login);
