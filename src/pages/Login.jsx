@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import fetchTokenApi from './pageFunctions/loginFuncs';
+import fetchTokenApi, { validateLoginFactory } from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -19,27 +19,26 @@ class Login extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.shoudRedirectToGamePage = this.shoudRedirectToGamePage.bind(this);
+    this.disableAndAbleButton = this.disableAndAbleButton.bind(this);
     this.verifyUserLogin = this.verifyUserLogin.bind(this);
   }
 
-  shoudRedirectToGamePage() {
-    const { disable } = this.state;
-    if (!disable) {
+  disableAndAbleButton(bollean) {
+    if (!bollean) {
       this.setState({
-        redirect: true,
+        disable: false,
+      });
+    } else {
+      this.setState({
+        disable: true,
       });
     }
   }
 
   verifyUserLogin() {
     const { username, email } = this.state;
-    const validator = username.length > 0 && email.length > 0;
-    if (validator) {
-      this.setState({ disable: false });
-    } else {
-      this.setState({ disable: true });
-    }
+    const shoudRedirectBollean = validateLoginFactory(email, username);
+    this.disableAndAbleButton(shoudRedirectBollean);
   }
 
   saveUserLoginOnState(name, value) {
@@ -48,14 +47,14 @@ class Login extends React.Component {
     });
   }
 
-  handleChange({ target: { name, value } }) {
-    this.saveUserLoginOnState(name, value);
+  async handleChange({ target: { name, value } }) {
+    await this.saveUserLoginOnState(name, value);
     this.verifyUserLogin();
   }
 
   async handleClick() {
     fetchTokenApi();
-    this.shoudRedirectToGamePage();
+    this.setState({ redirect: true });
   }
 
   render() {
