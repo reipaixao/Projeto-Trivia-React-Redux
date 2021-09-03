@@ -1,10 +1,8 @@
 import React from 'react';
 import { Redirect } from 'react-router';
-// import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
-// import fetchActions from '../redux/actions/fetchActions';
 
 class Login extends React.Component {
   constructor(props) {
@@ -20,7 +18,6 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.fetchTokenApi = this.fetchTokenApi.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
@@ -57,8 +54,6 @@ class Login extends React.Component {
 
   async handleClick() {
     const { disable } = this.state;
-    // const { initFetchApi } = this.props;
-    // await initFetchApi();
     this.fetchTokenApi();
     if (!disable) {
       this.setState({
@@ -112,9 +107,4 @@ class Login extends React.Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//   initFetchApi: () => dispatch(fetchActions()),
-// });
-
 export default Login;
-// export default connect(null, mapDispatchToProps)(Login);
