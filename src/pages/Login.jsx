@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import fetchTokenApi from './pageFunctions/loginFuncs';
+import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -95,6 +96,9 @@ class Login extends React.Component {
               disabled={ disable }
               onClick={ this.handleClick }
             />
+            <Link to="/settings">
+              <button type="button" data-testid="btn-settings">Configurações</button>
+            </Link>
           </form>
         </header>
       </div>
