@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 // import { connect } from 'react-redux';
+import fetchTokenApi from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -18,53 +19,44 @@ class Login extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.fetchTokenApi = this.fetchTokenApi.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.shoudRedirectToGamePage = this.shoudRedirectToGamePage.bind(this);
+    this.verifyUserLogin = this.verifyUserLogin.bind(this);
   }
 
-  handleChange({ target: { name, value } }) {
-    const { username, email } = this.state;
-    const validator = username.length > 0 && email.length > 0;
-
-    this.setState({
-      [name]: value,
-    });
-
-    if (validator) {
-      this.setState({
-        disable: false,
-      });
-    }
-
-    if (!validator) {
-      this.setState({
-        disable: true,
-      });
-    }
-  }
-
-  saveTokenOnLocalStorage(token) {
-    localStorage.setItem('token', JSON.stringify(token));
-  }
-
-  async fetchTokenApi() {
-    const fetchAppi = await fetch('https://opentdb.com/api_token.php?command=request');
-    const jsonFetch = await fetchAppi.json();
-    const { token } = await jsonFetch;
-    this.saveTokenOnLocalStorage(token);
-  }
-
-  async handleClick() {
+  shoudRedirectToGamePage() {
     const { disable } = this.state;
-    // const { initFetchApi } = this.props;
-    // await initFetchApi();
-    this.fetchTokenApi();
     if (!disable) {
       this.setState({
         redirect: true,
       });
     }
+  }
+
+  verifyUserLogin() {
+    const { username, email } = this.state;
+    const validator = username.length > 0 && email.length > 0;
+    if (validator) {
+      this.setState({ disable: false });
+    } else {
+      this.setState({ disable: true });
+    }
+  }
+
+  saveUserLoginOnState(name, value) {
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  handleChange({ target: { name, value } }) {
+    this.saveUserLoginOnState(name, value);
+    this.verifyUserLogin();
+  }
+
+  async handleClick() {
+    fetchTokenApi();
+    this.shoudRedirectToGamePage();
   }
 
   render() {
