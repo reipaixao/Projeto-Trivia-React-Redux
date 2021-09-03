@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
-import fetchTokenApi from './pageFunctions/loginFuncs';
 import { Link } from 'react-router-dom';
+import fetchTokenApi from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
