@@ -3,6 +3,7 @@ import { fetchGameApi } from './pageFunctions/loginFuncs';
 import Category from '../components/Category';
 import Question from '../components/Question';
 import Reset from '../components/Reset';
+import Home from '../components/Home';
 
 class Game extends React.Component {
   constructor() {
@@ -28,6 +29,7 @@ class Game extends React.Component {
         <Category />
         <Question />
         <Reset />
+        <Home />
       </main>
     );
   }
