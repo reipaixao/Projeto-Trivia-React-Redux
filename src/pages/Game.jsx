@@ -1,6 +1,8 @@
 import React from 'react';
 import { fetchGameApi } from './pageFunctions/loginFuncs';
 import Category from '../components/Category';
+import Question from '../components/Question';
+import Reset from '../components/Reset';
 
 class Game extends React.Component {
   constructor() {
@@ -24,6 +26,8 @@ class Game extends React.Component {
     return (
       <main>
         <Category />
+        <Question />
+        <Reset />
       </main>
     );
   }
