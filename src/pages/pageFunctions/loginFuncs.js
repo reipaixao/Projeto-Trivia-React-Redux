@@ -1,42 +1,37 @@
 // fetch api functions
 
 const saveTokenOnLocalStorage = (token) => {
-  localStorage.setItem('token', JSON.stringify(token));
+  localStorage.setItem('token', token);
 };
 
-const fetchTokenApi = async () => {
-  const fetchAppi = await fetch('https://opentdb.com/api_token.php?command=request');
-  const jsonFetch = await fetchAppi.json();
+export const fetchGameApi = async (token) => {
+  const gameToken = await fetch(`https://opentdb.com/api.php?amount=10&token=${token}`);
+  const json = await gameToken.json();
+
+  return json;
+};
+
+export const fetchTokenApi = async () => {
+  const fetchApi = await fetch('https://opentdb.com/api_token.php?command=request');
+  const jsonFetch = await fetchApi.json();
   const { token } = await jsonFetch;
+
   saveTokenOnLocalStorage(token);
+};
+
+export const fetchCategoriesList = async () => {
+  const api = await fetch('https://opentdb.com/api_category.php');
+  const json = await api.json();
+
+  return json;
 };
 
 // validate login functions
 
-function validateEmail(email) {
-  if (email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-    return true;
-  } return false;
-}
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-function validatePassword(password) {
-  if (password.length > 1) {
-    return true;
-  }
-  return false;
-}
+const validateUsername = (username) => username.length > 1;
 
-function validateLogin(email, username) {
-  if (email && username) {
-    return false;
-  }
-  return true;
-}
-
-export const validateLoginFactory = (email, username) => {
-  const validateEmailBollean = validateEmail(email);
-  const validateUsernameBollean = validatePassword(username);
-  return validateLogin(validateEmailBollean, validateUsernameBollean);
-};
-
-export default fetchTokenApi;
+export const validateLoginFactory = (email, username) => (
+  validateEmail(email) && validateUsername(username)
+);
