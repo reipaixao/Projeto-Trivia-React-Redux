@@ -8,6 +8,7 @@ function Select(props) {
     labelText,
     options,
     onChange,
+    testID,
   } = props;
   return (
     <label
@@ -18,6 +19,7 @@ function Select(props) {
         name={ name }
         id={ id }
         onChange={ onChange }
+        data-testid={ testID }
       >
         {
           options ? options.map((item, index) => (
@@ -42,6 +44,7 @@ Select.propTypes = {
   labelText: string,
   options: array,
   onChange: func,
+  testID: string,
 }.isRequired;
 
 export default Select;
