@@ -6,6 +6,11 @@ import resetLocalStorageScore from './pageFunctions/gameFuncs';
 import saveScoreOnStore from '../redux/actions/saveCurPlayerScore';
 import Header from '../components/Header';
 import Button from '../components/Button';
+import Category from '../components/Category';
+import Question from '../components/Question';
+import Reset from '../components/Reset';
+import Home from '../components/Home';
+// import Header from '../components/Header';
 
 class Game extends React.Component {
   constructor() {
@@ -60,7 +65,17 @@ class Game extends React.Component {
           onClick={ this.onClick }
         />
         <h2>Game Page</h2>
+        <main>
+          <Category />
+          <Question />
+          <Reset />
+          <Home />
+          {/* <div>
+          <Header />
+        </div> */}
+        </main>
       </div>
+
     );
   }
 }

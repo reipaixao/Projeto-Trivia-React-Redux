@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   userToken: '',
   isFetching: false,
+  questions: {},
 };
 
 function fetchReducer(state = INITIAL_STATE, action) {
@@ -15,6 +16,11 @@ function fetchReducer(state = INITIAL_STATE, action) {
       ...state,
       userToken: action.userToken,
       isFetching: false,
+    };
+  case 'SUBMIT_QUESTIONS':
+    return {
+      ...state,
+      questions: action.payload,
     };
   default:
     return {

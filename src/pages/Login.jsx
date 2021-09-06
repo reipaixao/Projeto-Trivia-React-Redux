@@ -1,9 +1,10 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import fetchTokenApi, {
+import {
   validateLoginFactory,
   savePlayerDataOnLocalStorage,
+  fetchTokenApi,
 } from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
@@ -26,21 +27,15 @@ class Login extends React.Component {
     this.verifyUserLogin = this.verifyUserLogin.bind(this);
   }
 
-  disableAndAbleButton(bollean) {
-    if (!bollean) {
-      this.setState({
-        disable: false,
-      });
-    } else {
-      this.setState({
-        disable: true,
-      });
-    }
+  disableAndAbleButton(boolean) {
+    return (
+      !boolean ? this.setState({ disable: false }) : this.setState({ disable: true })
+    );
   }
 
   verifyUserLogin() {
     const { username, email } = this.state;
-    const shoudRedirectBollean = validateLoginFactory(email, username);
+    const shoudRedirectBollean = !validateLoginFactory(email, username);
     this.disableAndAbleButton(shoudRedirectBollean);
   }
 
