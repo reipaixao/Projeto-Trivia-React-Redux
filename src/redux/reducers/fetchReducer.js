@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
   userToken: '',
   isFetching: false,
-  categoryName: '',
+  questions: {},
 };
 
 function fetchReducer(state = INITIAL_STATE, action) {
@@ -17,9 +17,10 @@ function fetchReducer(state = INITIAL_STATE, action) {
       userToken: action.userToken,
       isFetching: false,
     };
-  case 'SET_CATEGORY':
+  case 'SUBMIT_QUESTIONS':
     return {
-      categoryName: action.category,
+      ...state,
+      questions: action.payload,
     };
   default:
     return {

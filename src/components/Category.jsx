@@ -1,5 +1,9 @@
 import React from 'react';
-import { fetchCategoriesList } from '../pages/pageFunctions/loginFuncs';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { submitQuestions } from '../redux/actions/fetchActions';
+import fetchQuestions, { categoriesList } from '../pages/pageFunctions/gameFuncs';
+import Button from './Button';
 import Select from './Select';
 
 class Category extends React.Component {
@@ -8,52 +12,77 @@ class Category extends React.Component {
 
     this.state = {
       categories: [],
-      categoryName: '',
+      category: 'General Knowledge',
+      difficulty: 'medium',
+      type: 'boolean',
     };
 
-    this.categoriesList = this.categoriesList.bind(this);
-    this.handleCategoryName = this.handleCategoryName.bind(this);
+    this.setCategoriesList = this.setCategoriesList.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
-    this.categoriesList();
+    await this.setCategoriesList();
   }
 
-  async categoriesList() {
-    const fetchCategoriesApi = await fetchCategoriesList();
-    const getCategoriesList = fetchCategoriesApi.trivia_categories;
-    const getCategoriesName = await getCategoriesList.map((item) => (
-      item.name
-    ));
-
+  async setCategoriesList() {
     this.setState({
-      categories: getCategoriesName,
+      categories: await categoriesList(),
     });
   }
 
-  handleCategoryName({ target: { value } }) {
+  async handleChange({ target: { value, name } }) {
     this.setState({
-      categoryName: value,
+      [name]: value,
     });
+  }
+
+  async handleClick() {
+    const { questions } = this.props;
+    const request = await fetchQuestions(this.state);
+    console.log(request);
+
+    return questions(request);
   }
 
   render() {
-    const { categories, categoryName } = this.state;
-
+    const { categories, category, difficulty, type } = this.state;
     return (
       <section>
         <Select
           id="select-category"
           name="category"
           labelText="Escolha a categoria: "
-          options={ ['', ...categories] }
-          onChange={ this.handleCategoryName }
+          options={ categories }
+          onChange={ this.handleChange }
         />
-        { categoryName ? (
+        <Select
+          id="select-difficulty"
+          name="difficulty"
+          labelText="Escolha a dificuldade: "
+          options={ ['easy', 'medium', 'hard'] }
+          value={ difficulty }
+          onChange={ this.handleChange }
+        />
+        <Select
+          id="select-question-type"
+          name="type"
+          labelText="Escolha o tipo de categoria: "
+          options={ ['boolean', 'multiple'] }
+          value={ type }
+          onChange={ this.handleChange }
+        />
+        <Button
+          id="submit"
+          onClick={ () => this.handleClick() }
+          text="Iniciar Jogo"
+        />
+        { category ? (
           <h2
             data-testid="question-category"
           >
-            { categoryName }
+            { category }
           </h2>
         ) : null }
       </section>
@@ -61,4 +90,14 @@ class Category extends React.Component {
   }
 }
 
-export default Category;
+const { func } = PropTypes;
+
+Category.propTypes = {
+  questions: func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  questions: (payload) => dispatch(submitQuestions(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(Category);

@@ -22,9 +22,10 @@ function Select(props) {
         data-testid={ testID }
       >
         {
-          options ? options.map((item, index) => (
+          options ? options.map((item) => (
             <option
-              key={ index }
+              key={ item }
+              // chave={ item.id }
               value={ item }
             >
               { item }

@@ -1,4 +1,4 @@
-import { REQUEST_TOKEN, GET_TOKEN, SET_CATEGORY } from './actionTypes';
+import { REQUEST_TOKEN, GET_TOKEN, SET_CATEGORY, SUBMIT_QUESTIONS } from './actionTypes';
 
 const requestToken = () => ({
   type: REQUEST_TOKEN,
@@ -29,6 +29,11 @@ function fetchActions() {
 export const setCategory = (category) => ({
   type: SET_CATEGORY,
   categoryName: category,
+});
+
+export const submitQuestions = (payload) => ({
+  type: SUBMIT_QUESTIONS,
+  payload,
 });
 
 export default fetchActions;
