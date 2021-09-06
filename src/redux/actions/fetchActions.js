@@ -1,9 +1,11 @@
+import { REQUEST_TOKEN, GET_TOKEN, SET_CATEGORY, SUBMIT_QUESTIONS } from './actionTypes';
+
 const requestToken = () => ({
-  type: 'REQUEST_TOKEN',
+  type: REQUEST_TOKEN,
 });
 
 const getToken = (token) => ({
-  type: 'GET_TOKEN',
+  type: GET_TOKEN,
   userToken: token,
 });
 
@@ -23,5 +25,15 @@ function fetchActions() {
       });
   };
 }
+
+export const setCategory = (category) => ({
+  type: SET_CATEGORY,
+  categoryName: category,
+});
+
+export const submitQuestions = (payload) => ({
+  type: SUBMIT_QUESTIONS,
+  payload,
+});
 
 export default fetchActions;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import fetchTokenApi, { validateLoginFactory } from './pageFunctions/loginFuncs';
+import { validateLoginFactory, fetchTokenApi } from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -15,6 +15,7 @@ class Login extends React.Component {
       email: '',
       username: '',
       redirect: false,
+      scrore: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,22 +24,21 @@ class Login extends React.Component {
     this.verifyUserLogin = this.verifyUserLogin.bind(this);
   }
 
-  disableAndAbleButton(bollean) {
-    if (!bollean) {
-      this.setState({
-        disable: false,
-      });
-    } else {
-      this.setState({
-        disable: true,
-      });
-    }
+  disableAndAbleButton(boolean) {
+    return (
+      !boolean ? this.setState({ disable: false }) : this.setState({ disable: true })
+    );
   }
 
   verifyUserLogin() {
     const { username, email } = this.state;
-    const shoudRedirectBollean = validateLoginFactory(email, username);
+    const shoudRedirectBollean = !validateLoginFactory(email, username);
     this.disableAndAbleButton(shoudRedirectBollean);
+  }
+
+  saveState() {
+    localStorage.setItem('player', JSON.stringify(this.state));
+    // SALVANDO INFORMAÇÕES DO PLEYER
   }
 
   saveUserLoginOnState(name, value) {
@@ -50,6 +50,7 @@ class Login extends React.Component {
   async handleChange({ target: { name, value } }) {
     await this.saveUserLoginOnState(name, value);
     this.verifyUserLogin();
+    this.saveState();
   }
 
   async handleClick() {
