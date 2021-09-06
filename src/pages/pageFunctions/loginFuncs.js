@@ -1,5 +1,4 @@
 // fetch api functions
-
 const saveTokenOnLocalStorage = (token) => {
   localStorage.setItem('token', JSON.stringify(token));
 };
@@ -37,6 +36,12 @@ export const validateLoginFactory = (email, username) => {
   const validateEmailBollean = validateEmail(email);
   const validateUsernameBollean = validatePassword(username);
   return validateLogin(validateEmailBollean, validateUsernameBollean);
+};
+
+export const savePlayerDataOnLocalStorage = (state) => {
+  const { username, email } = state;
+  const user = { username, email };
+  localStorage.setItem('player', JSON.stringify(user));
 };
 
 export default fetchTokenApi;

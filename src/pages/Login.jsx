@@ -1,7 +1,10 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import fetchTokenApi, { validateLoginFactory } from './pageFunctions/loginFuncs';
+import fetchTokenApi, {
+  validateLoginFactory,
+  savePlayerDataOnLocalStorage,
+} from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -15,7 +18,6 @@ class Login extends React.Component {
       email: '',
       username: '',
       redirect: false,
-      scrore: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -42,11 +44,6 @@ class Login extends React.Component {
     this.disableAndAbleButton(shoudRedirectBollean);
   }
 
-  saveState() {
-    localStorage.setItem('player', JSON.stringify(this.state));
-    // SALVANDO INFORMAÇÕES DO PLEYER
-  }
-
   saveUserLoginOnState(name, value) {
     this.setState({
       [name]: value,
@@ -56,11 +53,11 @@ class Login extends React.Component {
   async handleChange({ target: { name, value } }) {
     await this.saveUserLoginOnState(name, value);
     this.verifyUserLogin();
-    this.saveState();
   }
 
   async handleClick() {
     fetchTokenApi();
+    savePlayerDataOnLocalStorage(this.state);
     this.setState({ redirect: true });
   }
 
@@ -69,45 +66,40 @@ class Login extends React.Component {
     if (redirect) return <Redirect to="/game" />;
 
     return (
-      <div>
-        <header className="App-header">
-          <img src={ logo } className="App-logo" alt="logo" />
-          <p>
-            SUA VEZ
-          </p>
+      <header className="App-header">
+        <img src={ logo } className="App-logo" alt="logo" />
 
-          <form>
-            <Input
-              type="text"
-              name="username"
-              id="player-name"
-              labelText="Usuário: "
-              testID="input-player-name"
-              onChange={ this.handleChange }
-              value={ username }
-            />
-            <Input
-              type="email"
-              name="email"
-              id="player-email"
-              labelText="E-mail: "
-              testID="input-gravatar-email"
-              onChange={ this.handleChange }
-              value={ email }
-            />
-            <Button
-              id="login-submit"
-              testID="btn-play"
-              text="Jogar"
-              disabled={ disable }
-              onClick={ this.handleClick }
-            />
-            <Link to="/settings">
-              <button type="button" data-testid="btn-settings">Configurações</button>
-            </Link>
-          </form>
-        </header>
-      </div>
+        <form>
+          <Input
+            type="text"
+            name="username"
+            id="player-name"
+            labelText="Usuário: "
+            testID="input-player-name"
+            onChange={ this.handleChange }
+            value={ username }
+          />
+          <Input
+            type="email"
+            name="email"
+            id="player-email"
+            labelText="E-mail: "
+            testID="input-gravatar-email"
+            onChange={ this.handleChange }
+            value={ email }
+          />
+          <Button
+            id="login-submit"
+            testID="btn-play"
+            text="Jogar"
+            disabled={ disable }
+            onClick={ this.handleClick }
+          />
+          <Link to="/settings">
+            <button type="button" data-testid="btn-settings">Configurações</button>
+          </Link>
+        </form>
+      </header>
     );
   }
 }
