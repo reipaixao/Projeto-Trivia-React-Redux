@@ -15,6 +15,7 @@ class Login extends React.Component {
       email: '',
       username: '',
       redirect: false,
+      scrore: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -35,6 +36,11 @@ class Login extends React.Component {
     this.disableAndAbleButton(shoudRedirectBollean);
   }
 
+  saveState() {
+    localStorage.setItem('player', JSON.stringify(this.state));
+    // SALVANDO INFORMAÇÕES DO PLEYER
+  }
+
   saveUserLoginOnState(name, value) {
     this.setState({
       [name]: value,
@@ -44,6 +50,7 @@ class Login extends React.Component {
   async handleChange({ target: { name, value } }) {
     await this.saveUserLoginOnState(name, value);
     this.verifyUserLogin();
+    this.saveState();
   }
 
   async handleClick() {
