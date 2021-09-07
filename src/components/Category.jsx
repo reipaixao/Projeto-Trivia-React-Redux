@@ -6,6 +6,14 @@ import { fetchQuestions, categoriesList } from '../pages/pageFunctions/gameFuncs
 import Button from './Button';
 import Select from './Select';
 
+const random = 'random';
+// const randomState = {
+//   category: 'Random',
+//   difficulty: 'Random',
+//   type: 'Random',
+//   randomGame: true,
+// };
+
 class Category extends React.Component {
   constructor() {
     super();
@@ -13,13 +21,15 @@ class Category extends React.Component {
     this.state = {
       categories: [],
       category: 'General Knowledge',
-      difficulty: 'medium',
+      difficulty: 'easy',
       type: 'boolean',
+      randomGame: true,
     };
 
     this.setCategoriesList = this.setCategoriesList.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.fetchGameApi = this.fetchGameApi.bind(this);
+    // this.randomGame = this.randomGame.bind(this);
   }
 
   async componentDidMount() {
@@ -33,17 +43,39 @@ class Category extends React.Component {
   }
 
   async handleChange({ target: { value, name } }) {
-    this.setState({
+    await this.setState({
       [name]: value,
+      randomGame: false,
     });
   }
 
-  async handleClick() {
-    const { questions } = this.props;
-    const request = await fetchQuestions(this.state);
-    console.log(await request);
+  verifyRandomGame({ randomGame }) {
+    if (randomGame) {
+      return true;
+    }
+    return false;
+  }
 
-    return questions(request);
+  randomGame() {
+    this.setState({
+      randomGame: true,
+    });
+
+    console.log('random game');
+  }
+
+  async fetchGameApi() {
+    const { questions } = this.props;
+    const ifIsRandomGame = await this.verifyRandomGame(this.state);
+    if (ifIsRandomGame) {
+      const request = await fetchQuestions(random);
+      console.log(request);
+      questions(request);
+    } else if (!ifIsRandomGame) {
+      const request = await fetchQuestions(this.state);
+
+      return questions(request);
+    }
   }
 
   render() {
@@ -75,8 +107,13 @@ class Category extends React.Component {
         />
         <Button
           id="submit"
-          onClick={ () => this.handleClick() }
+          onClick={ () => this.fetchGameApi() }
           text="Iniciar Jogo"
+        />
+        <Button
+          id="submit"
+          onClick={ () => this.randomGame() }
+          text="Random Game"
         />
         { category ? (
           <h2

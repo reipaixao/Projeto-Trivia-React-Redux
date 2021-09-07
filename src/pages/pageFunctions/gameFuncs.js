@@ -1,3 +1,7 @@
+const random = 'random';
+
+const testStateParam = (data) => data === random;
+
 const resetLocalStorageScore = () => {
   localStorage.setItem('score', JSON.stringify(0));
 };
@@ -12,11 +16,20 @@ const fetchCategoriesList = async () => {
 };
 
 export const fetchQuestionApi = async (data) => {
+  const verifyState = await testStateParam(data);
+
+  if (verifyState) {
+    const token = localStorage.getItem('token');
+
+    const fetchApi = await (await
+    fetch(`https://opentdb.com/api.php?amount=5&token=${token}`)).json();
+    return fetchApi;
+  }
   const { difficulty, type, id } = data;
 
-  const fetchCategoryApi = await (await fetch(`https://opentdb.com/api.php?amount=5&category=${id}&difficulty=${difficulty}&type=${type}`)).json();
+  const fetchCategoryApi = await (await
+  fetch(`https://opentdb.com/api.php?amount=5&category=${id}&difficulty=${difficulty}&type=${type}`)).json();
 
-  // console.log(fetchCategoryApi);
   return fetchCategoryApi;
 };
 
@@ -32,7 +45,15 @@ async function findCategoryId(category) {
 }
 
 export async function fetchQuestions(state) {
+  const verifyState = await testStateParam(state);
+
+  if (verifyState) {
+    const fetchRandom = await fetchQuestionApi(random);
+    return fetchRandom;
+  }
+
   const { category, difficulty, type } = state;
+
   const id = await findCategoryId(category);
   const data = { category, difficulty, type, id };
   const api = await fetchQuestionApi(data);
@@ -49,5 +70,3 @@ export const categoriesList = async () => {
 
   return getCategoriesName;
 };
-
-// export default fetchQuestions;

@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 
 class Header extends Component {
@@ -25,7 +26,7 @@ class Header extends Component {
 
   render() {
     const { username, imgemPerfil } = this.Gravatar();
-    const { score } = this.props;
+    const { score, testID } = this.props;
     return (
       <div>
         <img
@@ -36,7 +37,7 @@ class Header extends Component {
         <p data-testid="header-player-name">
           { username }
         </p>
-        <h3 data-testid="feedback-total-question">
+        <h3 data-testid={ testID }>
           {score}
         </h3>
       </div>
@@ -44,9 +45,14 @@ class Header extends Component {
   }
 }
 
-const { number } = PropTypes;
+const { number, string } = PropTypes;
 Header.propTypes = {
   score: number.isRequired,
+  testID: string.isRequired,
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  score: state.ScoreReducer.score,
+});
+
+export default connect(mapStateToProps)(Header);

@@ -6,11 +6,9 @@ import resetLocalStorageScore from './pageFunctions/gameFuncs';
 import saveScoreOnStore from '../redux/actions/saveCurPlayerScore';
 import Header from '../components/Header';
 import Button from '../components/Button';
-import Category from '../components/Category';
 import Question from '../components/Question';
 import Reset from '../components/Reset';
 import Home from '../components/Home';
-// import Header from '../components/Header';
 
 class Game extends React.Component {
   constructor() {
@@ -26,8 +24,12 @@ class Game extends React.Component {
     this.addScoreInThisComponent = this.addScoreInThisComponent.bind(this);
   }
 
-  componentDidMount() {
-    resetLocalStorageScore();
+  async componentDidMount() {
+    const { addScoreOnStore } = this.props;
+    const { score } = this.state;
+    await addScoreOnStore(score);
+
+    await resetLocalStorageScore();
   }
 
   async onClick() {
@@ -50,12 +52,14 @@ class Game extends React.Component {
   }
 
   render() {
-    const { redirect, score } = this.state;
+    const { redirect } = this.state;
     if (redirect) return <Redirect to="/feedback" />;
 
     return (
       <div>
-        <Header score={ score } />
+        <Header
+          testID="header-score"
+        />
         <Button
           text="Add Score Points"
           onClick={ this.addScoreOnClick }
@@ -66,13 +70,10 @@ class Game extends React.Component {
         />
         <h2>Game Page</h2>
         <main>
-          <Category />
           <Question />
           <Reset />
           <Home />
-          {/* <div>
-          <Header />
-        </div> */}
+
         </main>
       </div>
 
