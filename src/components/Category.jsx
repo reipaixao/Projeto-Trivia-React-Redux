@@ -41,6 +41,7 @@ class Category extends React.Component {
   async handleClick() {
     const { questions } = this.props;
     const request = await fetchQuestions(this.state);
+
     console.log(await request);
 
     return questions(request);
