@@ -1,37 +1,66 @@
-import React from 'react';
+// import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
-import { categoriesThunk } from '../redux/actions/fetchActions';
-// import { fetchQuestions } from '../pages/pageFunctions/gameFuncs';
+import { fetchQuestions } from '../redux/actions/fetchActions';
+import Answers from './Answers';
 
 class Question extends React.Component {
   componentDidMount() {
-    const { getQuestions } = this.props;
-    getQuestions();
+    const { getQuestions, token } = this.props;
+
+    getQuestions(token);
+  }
+
+  renderQuestions(question) {
+    const answers = [question.correct_answer, ...question.incorrect_answers];
+    answers.sort();
+    return (
+      <div>
+        <p data-testid="question-category">{question.category}</p>
+        <p data-testid="question-text">{question.question}</p>
+        <p>{question.correct_answer}</p>
+        <div>
+          <Answers answers={ answers } correctAnswer={ question.correct_answer } />
+        </div>
+      </div>
+    );
   }
 
   render() {
     const { questions } = this.props;
-    console.log(questions);
-
+    if (questions.length === 0) return <p>Loading...</p>;
+    const questionMap = questions.map((question) => this.renderQuestions(question));
     return (
-      <h2>Questions</h2>
+      questionMap[0]
+      // <div>oi</div>
     );
   }
 }
 
+Question.propTypes = {
+  getQuestions: PropTypes.func,
+  questions: PropTypes.shape({
+    length: PropTypes.number,
+    map: PropTypes.func,
+  }),
+  token: PropTypes.string,
+}.isRequired;
+
+Question.propTypes = {
+  questions: PropTypes.shape({
+    length: PropTypes.number,
+    map: PropTypes.func,
+  }),
+}.isRequired;
+
 const mapStateToProps = (state) => ({
-  questions: state.questions,
+  questions: state.fetchReducer.questions,
+  token: state.fetchReducer.userToken,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getQuestions: (results) => dispatch(categoriesThunk(results)),
+  getQuestions: (payload) => dispatch(fetchQuestions(payload)),
 });
-
-const { object } = PropTypes;
-
-Question.propTypes = {
-  questions: object,
-}.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Question);

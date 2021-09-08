@@ -3,7 +3,6 @@ import {
   GET_TOKEN,
   SET_CATEGORY,
   SUBMIT_QUESTIONS,
-  GET_QUESTIONS,
 } from './actionTypes';
 
 const requestToken = () => ({
@@ -15,12 +14,22 @@ const getToken = (token) => ({
   userToken: token,
 });
 
+const getQuestions = (questions) => ({
+  type: 'GET_QUESTIONS',
+  questions,
+});
+
+const getQuestionsError = (error) => ({
+  type: 'GET_QUESTIONS_ERROR',
+  error,
+});
+
 const saveTokenOnLocalStorage = (token) => {
   localStorage.setItem('token', JSON.stringify(token));
 };
 
 function fetchActions() {
-  return (dispatch) => { // thunk declarado
+  return (dispatch) => {
     dispatch(requestToken());
     fetch('https://opentdb.com/api_token.php?command=request')
       .then((response) => response.json())
@@ -29,6 +38,18 @@ function fetchActions() {
         saveTokenOnLocalStorage(token);
         dispatch(getToken(token));
       });
+  };
+}
+
+export function fetchQuestions(token) {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
+      const questions = await response.json();
+      return dispatch(getQuestions(questions.results));
+    } catch (error) {
+      return dispatch(getQuestionsError(error));
+    }
   };
 }
 
@@ -43,7 +64,7 @@ export const submitQuestions = (payload) => ({
 });
 
 export const categoriesThunk = () => (results) => ({
-  type: GET_QUESTIONS,
+  type: 'GET_QUESTIONS',
   questions: results,
 });
 

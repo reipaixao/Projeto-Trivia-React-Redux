@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
   userToken: '',
   isFetching: false,
-  questions: {},
+  questions: [],
 };
 
 function fetchReducer(state = INITIAL_STATE, action) {
@@ -22,11 +22,20 @@ function fetchReducer(state = INITIAL_STATE, action) {
       ...state,
       questions: action.payload,
     };
-  case 'GET_QUESTIONS':
-    return {
+  case 'ADD_QUESTIONS_ON_STORE':
+    return ({
       ...state,
-      questions: action.results,
-    };
+      questions: action.payload,
+    });
+  case 'GET_QUESTIONS':
+    return ({
+      ...state,
+      questions: action.questions,
+    });
+  case 'GET_QUESTIONS_ERROR':
+    return ({
+      ...state,
+    });
   default:
     return {
       ...state,
