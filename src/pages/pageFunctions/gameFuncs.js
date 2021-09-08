@@ -1,6 +1,6 @@
-const random = 'random';
+// const random = 'random';
 
-const testStateParam = (data) => data === random;
+// const testStateParam = (data) => data === random;
 
 const resetLocalStorageScore = () => {
   localStorage.setItem('score', JSON.stringify(0));
@@ -8,65 +8,69 @@ const resetLocalStorageScore = () => {
 
 export default resetLocalStorageScore;
 
-const fetchCategoriesList = async () => {
-  const api = await fetch('https://opentdb.com/api_category.php');
-  const json = await api.json();
+// const fetchCategoriesList = async () => {
+//   const api = await fetch('https://opentdb.com/api_category.php');
+//   const json = await api.json();
 
-  return json;
-};
+//   return json;
+// };
 
-export const fetchQuestionApi = async (data) => {
-  const verifyState = await testStateParam(data);
+// export const fetchQuestionApi = async (data) => {
+//   const verifyState = await testStateParam(data);
 
-  if (verifyState) {
-    const token = localStorage.getItem('token');
+//   if (verifyState) {
+//     const token = localStorage.getItem('token');
 
-    const fetchApi = await (await
-    fetch(`https://opentdb.com/api.php?amount=5&token=${token}`)).json();
-    return fetchApi;
-  }
-  const { difficulty, type, id } = data;
+//     const fetchApi = await (await
+//     fetch(`https://opentdb.com/api.php?amount=5&token=${token}`))
+//       .json();
 
-  const fetchCategoryApi = await (await
-  fetch(`https://opentdb.com/api.php?amount=5&category=${id}&difficulty=${difficulty}&type=${type}`)).json();
+//     const { results } = fetchApi;
+//     // console.log(fetchApi);
+//     return results;
+//   }
+//   const { difficulty, type, id } = data;
 
-  return fetchCategoryApi;
-};
+//   const fetchCategoryApi = await (await
+//   fetch(`https://opentdb.com/api.php?amount=5&category=${id}&difficulty=${difficulty}&type=${type}`)).json();
 
-async function findCategoryId(category) {
-  const fetchCategoriesApi = await fetchCategoriesList();
-  const getCategoriesList = fetchCategoriesApi.trivia_categories;
-  const findCategoriesByName = getCategoriesList.find((categoryName) => (
-    categoryName.name === category ? categoryName : null
-  ));
-  const { id } = findCategoriesByName;
+//   return fetchCategoryApi;
+// };
 
-  return id;
-}
+// async function findCategoryId(category) {
+//   const fetchCategoriesApi = await fetchCategoriesList();
+//   const getCategoriesList = fetchCategoriesApi.trivia_categories;
+//   const findCategoriesByName = getCategoriesList.find((categoryName) => (
+//     categoryName.name === category ? categoryName : null
+//   ));
+//   const { id } = findCategoriesByName;
 
-export async function fetchQuestions(state) {
-  const verifyState = await testStateParam(state);
+//   return id;
+// }
 
-  if (verifyState) {
-    const fetchRandom = await fetchQuestionApi(random);
-    return fetchRandom;
-  }
+// export async function fetchQuestions(state) {
+//   const verifyState = await testStateParam(state);
 
-  const { category, difficulty, type } = state;
+//   if (verifyState) {
+//     const fetchRandom = await fetchQuestionApi(random);
+//     return fetchRandom;
+//   }
 
-  const id = await findCategoryId(category);
-  const data = { category, difficulty, type, id };
-  const api = await fetchQuestionApi(data);
+// const { category, difficulty, type } = state;
 
-  return api;
-}
+// const id = await findCategoryId(category);
+// const data = { category, difficulty, type, id };
+// const api = await fetchQuestionApi(data);
 
-export const categoriesList = async () => {
-  const fetchCategoriesApi = await fetchCategoriesList();
-  const getCategoriesList = fetchCategoriesApi.trivia_categories; // Array com as categorias
-  const getCategoriesName = await getCategoriesList.map((item) => (
-    item.name
-  ));
+// return api;
+// }
 
-  return getCategoriesName;
-};
+// export const categoriesList = async () => {
+//   const fetchCategoriesApi = await fetchCategoriesList();
+//   const getCategoriesList = fetchCategoriesApi.trivia_categories; // Array com as categorias
+//   const getCategoriesName = await getCategoriesList.map((item) => (
+//     item.name
+//   ));
+
+//   return getCategoriesName;
+// };
