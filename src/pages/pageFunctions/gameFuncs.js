@@ -25,14 +25,14 @@ async function findCategoryId(category) {
   return id;
 }
 
-async function fetchQuestions(state) {
+export const fetchQuestions = async (state) => {
   const { category, difficulty, type } = state;
   const id = await findCategoryId(category);
   const data = { category, difficulty, type, id };
   const api = await fetchQuestionApi(data);
 
   return api;
-}
+};
 
 export const categoriesList = async () => {
   const fetchCategoriesApi = await fetchCategoriesList();
@@ -43,5 +43,3 @@ export const categoriesList = async () => {
 
   return getCategoriesName;
 };
-
-export default fetchQuestions;

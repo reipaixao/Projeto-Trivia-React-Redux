@@ -1,8 +1,10 @@
 import React from 'react';
 import Category from '../components/Category';
-import Question from '../components/Question';
-import Reset from '../components/Reset';
-import Home from '../components/Home';
+import {
+  Question,
+  Reset,
+  Home,
+} from '../components';
 // import Header from '../components/Header';
 
 class Game extends React.Component {

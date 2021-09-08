@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { submitQuestions } from '../redux/actions/fetchActions';
-import fetchQuestions, { categoriesList } from '../pages/pageFunctions/gameFuncs';
-import Button from './Button';
-import Select from './Select';
+import { fetchQuestions, categoriesList } from '../pages/pageFunctions/gameFuncs';
+import { Button, Select } from './index';
 
 class Category extends React.Component {
   constructor() {
@@ -41,7 +40,7 @@ class Category extends React.Component {
   async handleClick() {
     const { questions } = this.props;
     const request = await fetchQuestions(this.state);
-    console.log(request);
+    // console.log(request);
 
     return questions(request);
   }
@@ -90,10 +89,10 @@ class Category extends React.Component {
   }
 }
 
-const { func } = PropTypes;
+const { object } = PropTypes;
 
 Category.propTypes = {
-  questions: func,
+  questions: object,
 }.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({

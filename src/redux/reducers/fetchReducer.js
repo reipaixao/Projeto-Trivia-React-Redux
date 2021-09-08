@@ -22,6 +22,11 @@ function fetchReducer(state = INITIAL_STATE, action) {
       ...state,
       questions: action.payload,
     };
+  case 'GET_QUESTIONS':
+    return {
+      ...state,
+      questions: action.results,
+    };
   default:
     return {
       ...state,

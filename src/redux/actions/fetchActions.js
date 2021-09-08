@@ -1,4 +1,10 @@
-import { REQUEST_TOKEN, GET_TOKEN, SET_CATEGORY, SUBMIT_QUESTIONS } from './actionTypes';
+import {
+  REQUEST_TOKEN,
+  GET_TOKEN,
+  SET_CATEGORY,
+  SUBMIT_QUESTIONS,
+  GET_QUESTIONS,
+} from './actionTypes';
 
 const requestToken = () => ({
   type: REQUEST_TOKEN,
@@ -34,6 +40,11 @@ export const setCategory = (category) => ({
 export const submitQuestions = (payload) => ({
   type: SUBMIT_QUESTIONS,
   payload,
+});
+
+export const categoriesThunk = () => (results) => ({
+  type: GET_QUESTIONS,
+  questions: results,
 });
 
 export default fetchActions;
