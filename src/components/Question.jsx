@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchQuestions } from '../redux/actions/fetchActions';
 import Answers from './Answers';
+import Timer from './Timer';
 
 class Question extends React.Component {
   componentDidMount() {
@@ -32,7 +33,10 @@ class Question extends React.Component {
     if (questions.length === 0) return <p>Loading...</p>;
     const questionMap = questions.map((question) => this.renderQuestions(question));
     return (
-      questionMap[0]
+      <div>
+        <Timer />
+        { questionMap[0] }
+      </div>
       // <div>oi</div>
     );
   }
@@ -45,13 +49,6 @@ Question.propTypes = {
     map: PropTypes.func,
   }),
   token: PropTypes.string,
-}.isRequired;
-
-Question.propTypes = {
-  questions: PropTypes.shape({
-    length: PropTypes.number,
-    map: PropTypes.func,
-  }),
 }.isRequired;
 
 const mapStateToProps = (state) => ({
