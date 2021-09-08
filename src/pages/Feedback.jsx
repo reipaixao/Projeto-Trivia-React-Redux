@@ -17,7 +17,10 @@ class Feedback extends Component {
     const score = getitem();
     return (
       <div>
-        <Header score={ score } />
+        <Header
+          score={ score }
+          testID="feedback-total-question"
+        />
         <FeedbackAnswers score={ score } />
       </div>
     );

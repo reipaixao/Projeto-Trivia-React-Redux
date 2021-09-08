@@ -1,48 +1,59 @@
-import React, { useState } from 'react';
+// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { fetchQuestions } from '../redux/actions/fetchActions';
+import Answers from './Answers';
 
-const Question = () => {
-  const INITIAL_TIME = 30;
-  const [count, setCount] = useState(INITIAL_TIME);
-  const [intervalId, setIntervalId] = useState(0);
+class Question extends React.Component {
+  componentDidMount() {
+    const { getQuestions, token } = this.props;
 
-  const handleClick = () => {
-    const INITIAL_TIME_CLICK = 100;
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(0);
-      return;
-    }
+    getQuestions(token);
+  }
 
-    const newIntervalId = setInterval(() => {
-      setCount((prevCount) => prevCount - 1);
-    }, INITIAL_TIME_CLICK);
+  renderQuestions(question) {
+    const answers = [question.correct_answer, ...question.incorrect_answers];
+    answers.sort();
+    return (
+      <div>
+        <p data-testid="question-category">{question.category}</p>
+        <p data-testid="question-text">{question.question}</p>
+        <p>{question.correct_answer}</p>
+        <div>
+          <Answers answers={ answers } correctAnswer={ question.correct_answer } />
+        </div>
+      </div>
+    );
+  }
 
-    setIntervalId(newIntervalId);
-  };
+  render() {
+    const { questions } = this.props;
+    if (questions.length === 0) return <p>Loading...</p>;
+    const questionMap = questions.map((question) => this.renderQuestions(question));
+    return (
+      questionMap[0]
+      // <div>oi</div>
+    );
+  }
+}
 
-  const clearTime = () => {
-    if (count < 0) {
-      clearInterval(setCount);
-      clearInterval(intervalId);
+Question.propTypes = {
+  getQuestions: PropTypes.func,
+  questions: PropTypes.shape({
+    length: PropTypes.number,
+    map: PropTypes.func,
+  }),
+  token: PropTypes.string,
+}.isRequired;
 
-      setCount(INITIAL_TIME);
-      setIntervalId(0);
-    }
-  };
+const mapStateToProps = (state) => ({
+  questions: state.fetchReducer.questions,
+  token: state.fetchReducer.userToken,
+});
 
-  clearTime();
+const mapDispatchToProps = (dispatch) => ({
+  getQuestions: (payload) => dispatch(fetchQuestions(payload)),
+});
 
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button
-        type="button"
-        onClick={ handleClick }
-      >
-        {intervalId ? 'Stop' : 'Start'}
-      </button>
-    </div>
-  );
-};
-
-export default Question;
+export default connect(mapStateToProps, mapDispatchToProps)(Question);
