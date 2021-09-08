@@ -1,14 +1,20 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import fetchActions from '../redux/actions/fetchActions';
+
 import {
   validateLoginFactory,
   savePlayerDataOnLocalStorage,
-  fetchTokenApi,
+  // fetchTokenApi,
 } from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
+
+// const random = 'random';
 
 class Login extends React.Component {
   constructor(props) {
@@ -50,8 +56,9 @@ class Login extends React.Component {
     this.verifyUserLogin();
   }
 
-  async handleClick() {
-    fetchTokenApi();
+  handleClick() {
+    const { fetchToken } = this.props;
+    fetchToken();
     savePlayerDataOnLocalStorage(this.state);
     this.setState({ redirect: true });
   }
@@ -99,4 +106,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  fetchToken: PropTypes.func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchToken: () => dispatch(fetchActions()),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
