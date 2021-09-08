@@ -1,5 +1,4 @@
 // fetch api functions
-
 const saveTokenOnLocalStorage = (token) => {
   localStorage.setItem('token', token);
 };
@@ -17,6 +16,12 @@ export const fetchTokenApi = async () => {
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const validateUsername = (username) => username.length > 1;
+
+export const savePlayerDataOnLocalStorage = (state) => {
+  const { username, email } = state;
+  const user = { username, email };
+  localStorage.setItem('player', JSON.stringify(user));
+};
 
 export const validateLoginFactory = (email, username) => (
   validateEmail(email) && validateUsername(username)

@@ -1,103 +1,140 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { submitQuestions } from '../redux/actions/fetchActions';
-import fetchQuestions, { categoriesList } from '../pages/pageFunctions/gameFuncs';
-import Button from './Button';
-import Select from './Select';
+// import React from 'react';
+// import PropTypes from 'prop-types';
+// import { connect } from 'react-redux';
+// import { submitQuestions } from '../redux/actions/fetchActions';
+// import { fetchQuestions, categoriesList } from '../pages/pageFunctions/gameFuncs';
+// import Button from './Button';
+// import Select from './Select';
 
-class Category extends React.Component {
-  constructor() {
-    super();
+// const random = 'random';
+// // const randomState = {
+// //   category: 'Random',
+// //   difficulty: 'Random',
+// //   type: 'Random',
+// //   randomGame: true,
+// // };
 
-    this.state = {
-      categories: [],
-      category: 'General Knowledge',
-      difficulty: 'medium',
-      type: 'boolean',
-    };
+// class Category extends React.Component {
+//   constructor() {
+//     super();
 
-    this.setCategoriesList = this.setCategoriesList.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
+//     this.state = {
+//       categories: [],
+//       category: 'General Knowledge',
+//       difficulty: 'easy',
+//       type: 'boolean',
+//       randomGame: true,
+//     };
 
-  async componentDidMount() {
-    await this.setCategoriesList();
-  }
+//     this.setCategoriesList = this.setCategoriesList.bind(this);
+//     this.handleChange = this.handleChange.bind(this);
+//     this.fetchGameApi = this.fetchGameApi.bind(this);
+//     // this.randomGame = this.randomGame.bind(this);
+//   }
 
-  async setCategoriesList() {
-    this.setState({
-      categories: await categoriesList(),
-    });
-  }
+//   async componentDidMount() {
+//     await this.setCategoriesList();
+//   }
 
-  async handleChange({ target: { value, name } }) {
-    this.setState({
-      [name]: value,
-    });
-  }
+//   async setCategoriesList() {
+//     this.setState({
+//       categories: await categoriesList(),
+//     });
+//   }
 
-  async handleClick() {
-    const { questions } = this.props;
-    const request = await fetchQuestions(this.state);
-    console.log(request);
+//   async handleChange({ target: { value, name } }) {
+//     await this.setState({
+//       [name]: value,
+//       randomGame: false,
+//     });
+//   }
 
-    return questions(request);
-  }
+//   verifyRandomGame({ randomGame }) {
+//     if (randomGame) {
+//       return true;
+//     }
+//     return false;
+//   }
 
-  render() {
-    const { categories, category, difficulty, type } = this.state;
-    return (
-      <section>
-        <Select
-          id="select-category"
-          name="category"
-          labelText="Escolha a categoria: "
-          options={ categories }
-          onChange={ this.handleChange }
-        />
-        <Select
-          id="select-difficulty"
-          name="difficulty"
-          labelText="Escolha a dificuldade: "
-          options={ ['easy', 'medium', 'hard'] }
-          value={ difficulty }
-          onChange={ this.handleChange }
-        />
-        <Select
-          id="select-question-type"
-          name="type"
-          labelText="Escolha o tipo de categoria: "
-          options={ ['boolean', 'multiple'] }
-          value={ type }
-          onChange={ this.handleChange }
-        />
-        <Button
-          id="submit"
-          onClick={ () => this.handleClick() }
-          text="Iniciar Jogo"
-        />
-        { category ? (
-          <h2
-            data-testid="question-category"
-          >
-            { category }
-          </h2>
-        ) : null }
-      </section>
-    );
-  }
-}
+//   randomGame() {
+//     this.setState({
+//       randomGame: true,
+//     });
 
-const { func } = PropTypes;
+//     console.log('random game');
+//   }
 
-Category.propTypes = {
-  questions: func,
-}.isRequired;
+//   async fetchGameApi() {
+//     const { questions } = this.props;
+//     const ifIsRandomGame = await this.verifyRandomGame(this.state);
+//     if (ifIsRandomGame) {
+//       const request = await fetchQuestions(random);
+//       console.log(request);
+//       questions(request);
+//     } else if (!ifIsRandomGame) {
+//       const request = await fetchQuestions(this.state);
 
-const mapDispatchToProps = (dispatch) => ({
-  questions: (payload) => dispatch(submitQuestions(payload)),
-});
+//       return questions(request);
+//     }
+//   }
 
-export default connect(null, mapDispatchToProps)(Category);
+//   render() {
+//     const { categories, category, difficulty, type } = this.state;
+//     return (
+//       <section>
+//         <Select
+//           id="select-category"
+//           name="category"
+//           labelText="Escolha a categoria: "
+//           options={ categories }
+//           onChange={ this.handleChange }
+//         />
+//         <Select
+//           id="select-difficulty"
+//           name="difficulty"
+//           labelText="Escolha a dificuldade: "
+//           options={ ['easy', 'medium', 'hard'] }
+//           value={ difficulty }
+//           onChange={ this.handleChange }
+//         />
+//         <Select
+//           id="select-question-type"
+//           name="type"
+//           labelText="Escolha o tipo de categoria: "
+//           options={ ['boolean', 'multiple'] }
+//           value={ type }
+//           onChange={ this.handleChange }
+//         />
+//         <Button
+//           id="submit"
+//           onClick={ () => this.fetchGameApi() }
+//           text="Iniciar Jogo"
+//         />
+//         <Button
+//           id="submit"
+//           onClick={ () => this.randomGame() }
+//           text="Random Game"
+//         />
+//         { category ? (
+//           <h2
+//             data-testid="question-category"
+//           >
+//             { category }
+//           </h2>
+//         ) : null }
+//       </section>
+//     );
+//   }
+// }
+
+// const { func } = PropTypes;
+
+// Category.propTypes = {
+//   questions: func,
+// }.isRequired;
+
+// const mapDispatchToProps = (dispatch) => ({
+//   questions: (payload) => dispatch(submitQuestions(payload)),
+// });
+
+// export default connect(null, mapDispatchToProps)(Category);

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 
 class Header extends Component {
@@ -7,21 +9,24 @@ class Header extends Component {
     this.Gravatar = this.Gravatar.bind(this);
   }
 
+  getPlayerDataFromLocalStorage() {
+    const getPlayerData = JSON.parse(localStorage.getItem('player'));
+    return getPlayerData;
+  }
+
   Gravatar() {
-    // PEGANDO INFORMAÇÕES DO LOCALSTORAGE
-    const savePersil = JSON.parse(localStorage.getItem('player'));
-    const { email, score, username } = savePersil;
+    const { username, email } = this.getPlayerDataFromLocalStorage();
 
     const hashGerada = md5(email).toString();
     const imgemPerfil = `https://www.gravatar.com/avatar/${hashGerada}`;
-    const perfil = { username, imgemPerfil, score };
+    const perfil = { username, imgemPerfil, email };
 
     return perfil;
   }
 
   render() {
-    // DESESTRUTURANDO DA FUNÇÃO fetchApiGravatar
-    const { username, imgemPerfil, score } = this.Gravatar();
+    const { username, imgemPerfil } = this.Gravatar();
+    const { score, testID } = this.props;
     return (
       <div>
         <img
@@ -32,12 +37,22 @@ class Header extends Component {
         <p data-testid="header-player-name">
           { username }
         </p>
-        <h3 data-testid="header-score">
-          {score > 0 ? score : 0}
+        <h3 data-testid={ testID }>
+          {score}
         </h3>
       </div>
     );
   }
 }
 
-export default Header;
+const { number, string } = PropTypes;
+Header.propTypes = {
+  score: number.isRequired,
+  testID: string.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  score: state.ScoreReducer.score,
+});
+
+export default connect(mapStateToProps)(Header);
