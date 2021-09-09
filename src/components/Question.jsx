@@ -6,6 +6,7 @@ import {
 import { fetchQuestions } from '../redux/actions/fetchActions';
 import Clock from './timer';
 import Answers from './Answers';
+import Timer from './Timer';
 
 class Question extends React.Component {
   componentDidMount() {
@@ -49,13 +50,6 @@ Question.propTypes = {
     map: PropTypes.func,
   }),
   token: PropTypes.string,
-}.isRequired;
-
-Question.propTypes = {
-  questions: PropTypes.shape({
-    length: PropTypes.number,
-    map: PropTypes.func,
-  }),
 }.isRequired;
 
 const mapStateToProps = (state) => ({
