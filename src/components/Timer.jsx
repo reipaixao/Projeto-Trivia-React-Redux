@@ -1,46 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Timer() {
-  const INITIAL_TIME = 30;
+class Timer extends React.Component {
+  constructor() {
+    super();
 
-  const [count, setCount] = useState(INITIAL_TIME);
-  const [intervalId, setIntervalId] = useState(0);
+    this.state = {
+      count: 30,
+    };
 
-  const handleClick = () => {
-    const INITIAL_TIME_CLICK = 1000;
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(0);
-      return;
+    this.handleTimer = this.handleTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleTimer();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const MIN_SECOND = 0;
+
+    if (prevState.count === MIN_SECOND) {
+      this.stopTimer();
     }
-    const newIntervalId = setInterval(() => {
-      setCount((prevCount) => prevCount - 1);
-    }, INITIAL_TIME_CLICK);
-    setIntervalId(newIntervalId);
-  };
+  }
 
-  const clearTime = () => {
-    if (count < 0) {
-      clearInterval(setCount);
-      clearInterval(intervalId);
-      setCount(INITIAL_TIME);
-      setIntervalId(0);
-    }
-  };
+  handleTimer() {
+    const INTERVAL_TIME = 1000;
 
-  clearTime();
+    setInterval(() => {
+      this.setState((prevState) => ({
+        count: prevState.count - 1,
+      }));
+    }, INTERVAL_TIME);
+  }
 
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button
-        type="button"
-        onClick={ handleClick }
-      >
-        {intervalId ? 'Stop' : 'Start'}
-      </button>
-    </div>
-  );
+  stopTimer() {
+    return this.setState({ count: 0 });
+  }
+
+  render() {
+    const { count } = this.state;
+    return (
+      <h2>{ count }</h2>
+    );
+  }
 }
 
 export default Timer;
