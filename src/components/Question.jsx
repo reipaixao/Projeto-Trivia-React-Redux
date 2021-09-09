@@ -1,11 +1,17 @@
-// import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+} from '../redux/actions/saveCurPlayerScore';
 import { fetchQuestions } from '../redux/actions/fetchActions';
+import Clock from './timer';
 import Answers from './Answers';
 
 class Question extends React.Component {
+  // constructor() {
+  //   super();
+  // }
+
   componentDidMount() {
     const { getQuestions, token } = this.props;
 
@@ -32,8 +38,10 @@ class Question extends React.Component {
     if (questions.length === 0) return <p>Loading...</p>;
     const questionMap = questions.map((question) => this.renderQuestions(question));
     return (
-      questionMap[0]
-      // <div>oi</div>
+      <div>
+        {questionMap[0]}
+        <Clock />
+      </div>
     );
   }
 }
