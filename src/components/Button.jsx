@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Button(props) {
-  const { id, onClick, testID, text, disabled } = props;
+  const { category, id, onClick, testID, text, disabled } = props;
   return (
     <button
-      type="submit"
+      type={ category ? 'button' : 'submit' }
       id={ id }
       onClick={ onClick }
       data-testid={ testID }

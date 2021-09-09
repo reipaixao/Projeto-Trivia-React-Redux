@@ -1,10 +1,20 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import fetchTokenApi from './pageFunctions/loginFuncs';
+import { connect } from 'react-redux';
+import fetchActions from '../redux/actions/fetchActions';
+
+import {
+  validateLoginFactory,
+  savePlayerDataOnLocalStorage,
+  // fetchTokenApi,
+} from './pageFunctions/loginFuncs';
 import logo from '../trivia.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
+
+// const random = 'random';
 
 class Login extends React.Component {
   constructor(props) {
@@ -15,37 +25,24 @@ class Login extends React.Component {
       email: '',
       username: '',
       redirect: false,
-      scrore: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.shoudRedirectToGamePage = this.shoudRedirectToGamePage.bind(this);
+    this.disableAndAbleButton = this.disableAndAbleButton.bind(this);
     this.verifyUserLogin = this.verifyUserLogin.bind(this);
   }
 
-  shoudRedirectToGamePage() {
-    const { disable } = this.state;
-    if (!disable) {
-      this.setState({
-        redirect: true,
-      });
-    }
+  disableAndAbleButton(boolean) {
+    return (
+      !boolean ? this.setState({ disable: false }) : this.setState({ disable: true })
+    );
   }
 
   verifyUserLogin() {
     const { username, email } = this.state;
-    const validator = username.length > 0 && email.length > 0;
-    if (validator) {
-      this.setState({ disable: false });
-    } else {
-      this.setState({ disable: true });
-    }
-  }
-
-  saveState() {
-    localStorage.setItem('player', JSON.stringify(this.state));
-    // SALVANDO INFORMAÇÕES DO PLEYER
+    const shoudRedirectBollean = !validateLoginFactory(email, username);
+    this.disableAndAbleButton(shoudRedirectBollean);
   }
 
   saveUserLoginOnState(name, value) {
@@ -54,15 +51,16 @@ class Login extends React.Component {
     });
   }
 
-  handleChange({ target: { name, value } }) {
-    this.saveUserLoginOnState(name, value);
+  async handleChange({ target: { name, value } }) {
+    await this.saveUserLoginOnState(name, value);
     this.verifyUserLogin();
-    this.saveState();
   }
 
-  async handleClick() {
-    fetchTokenApi();
-    this.shoudRedirectToGamePage();
+  handleClick() {
+    const { fetchToken } = this.props;
+    fetchToken();
+    savePlayerDataOnLocalStorage(this.state);
+    this.setState({ redirect: true });
   }
 
   render() {
@@ -70,47 +68,50 @@ class Login extends React.Component {
     if (redirect) return <Redirect to="/game" />;
 
     return (
-      <div>
-        <header className="App-header">
-          <img src={ logo } className="App-logo" alt="logo" />
-          <p>
-            SUA VEZ
-          </p>
+      <header className="App-header">
+        <img src={ logo } className="App-logo" alt="logo" />
 
-          <form>
-            <Input
-              type="text"
-              name="username"
-              id="player-name"
-              labelText="Usuário: "
-              testID="input-player-name"
-              onChange={ this.handleChange }
-              value={ username }
-            />
-            <Input
-              type="email"
-              name="email"
-              id="player-email"
-              labelText="E-mail: "
-              testID="input-gravatar-email"
-              onChange={ this.handleChange }
-              value={ email }
-            />
-            <Button
-              id="login-submit"
-              testID="btn-play"
-              text="Jogar"
-              disabled={ disable }
-              onClick={ this.handleClick }
-            />
-            <Link to="/settings">
-              <button type="button" data-testid="btn-settings">Configurações</button>
-            </Link>
-          </form>
-        </header>
-      </div>
+        <form>
+          <Input
+            type="text"
+            name="username"
+            id="player-name"
+            labelText="Usuário: "
+            testID="input-player-name"
+            onChange={ this.handleChange }
+            value={ username }
+          />
+          <Input
+            type="email"
+            name="email"
+            id="player-email"
+            labelText="E-mail: "
+            testID="input-gravatar-email"
+            onChange={ this.handleChange }
+            value={ email }
+          />
+          <Button
+            id="login-submit"
+            testID="btn-play"
+            text="Jogar"
+            disabled={ disable }
+            onClick={ this.handleClick }
+          />
+          <Link to="/settings">
+            <button type="button" data-testid="btn-settings">Configurações</button>
+          </Link>
+        </form>
+      </header>
     );
   }
 }
 
-export default Login;
+Login.propTypes = {
+  fetchToken: PropTypes.func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchToken: () => dispatch(fetchActions()),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
