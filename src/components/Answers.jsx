@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import saveScoreOnStore from '../redux/actions/saveCurPlayerScore';
 
+// const disabledCss = {input:disabled {
+//   background: #dddddd;
+// }}
+
 class Answers extends React.Component {
   constructor() {
     super();
     this.state = {
       score: 0,
-      disable: '',
+      disable: false,
       correctColor: { border: '1px solid black', cursor: 'pointer' },
       wrongColor: { border: '1px solid black', cursor: 'pointer' },
     };
@@ -32,11 +36,14 @@ class Answers extends React.Component {
   }
 
   handleClick({ target }, correctAnswer) {
+    if (target.disabled === true) {
+      return false;
+    }
     if (target.value === correctAnswer) {
       this.addScoreOnClick();
     }
     this.setState({
-      disable: 'disable',
+      disable: true,
       correctColor: { border: '3px solid rgb(6, 240, 15)' },
       wrongColor: { border: '3px solid rgb(255, 0, 0)' },
     });
