@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 const SECOND_1 = 1000;
 
@@ -35,4 +36,9 @@ class Clock extends Component {
     );
   }
 }
-export default Clock;
+
+const mapDispatchToProps = (dispatch) => ({
+  clearInterval: (payload) => dispatch(clearInterval(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(Clock);

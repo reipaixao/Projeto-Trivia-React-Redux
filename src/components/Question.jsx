@@ -8,10 +8,6 @@ import Clock from './timer';
 import Answers from './Answers';
 
 class Question extends React.Component {
-  // constructor() {
-  //   super();
-  // }
-
   componentDidMount() {
     const { getQuestions, token } = this.props;
 
