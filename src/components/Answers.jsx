@@ -1,57 +1,77 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import saveScoreOnStore from '../redux/actions/saveCurPlayerScore';
+import './Button.css';
 import NextButton from './NextButton';
 
 class Answers extends React.Component {
   constructor() {
     super();
-
     this.state = {
-      correctColor: { border: '1px solid black', cursor: 'pointer' },
-      wrongColor: { border: '1px solid black', cursor: 'pointer' },
-      respondido: false,
+      score: 0,
+      disable: false,
+      correctColor: 'defaultColor',
+      wrongColor: 'defaultColor',
     };
 
+    this.addScoreOnClick = this.addScoreOnClick.bind(this);
+    this.addScoreInThisComponent = this.addScoreInThisComponent.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  addScoreInThisComponent() {
+    this.setState((prevState) => ({
+      score: prevState.score + 1,
+    }));
+  }
+
+  async addScoreOnClick() {
+    await this.addScoreInThisComponent();
+    const { addScoreOnStore } = this.props;
+    const { score } = this.state;
+    addScoreOnStore(score);
   }
 
   handleClick({ target }, correctAnswer) {
     if (target.value === correctAnswer) {
-      console.log('acertou');
+      this.addScoreOnClick();
     }
     this.setState({
-      correctColor: { border: '3px solid rgb(6, 240, 15)' },
-      wrongColor: { border: '3px solid rgb(255, 0, 0)' },
-      respondido: true,
+      disable: true,
+      correctColor: 'correctColor',
+      wrongColor: 'wrongColor',
     });
   }
 
   render() {
     const { answers, correctAnswer } = this.props;
-    const { correctColor, wrongColor, respondido } = this.state;
+    const { correctColor, wrongColor, disable } = this.state;
     return (
-      <div>
-        {answers.map((answer, index) => (
-          <button
-            type="button"
-            key={ answer }
-            value={ answer }
-            data-testid={ correctAnswer === answers[index]
-              ? 'correct-answer' : `wrong-answer-${index}` }
-            onClick={ (e) => this.handleClick(e, correctAnswer) }
-            style={ correctAnswer === answers[index] ? correctColor : wrongColor }
-          >
-            {answer}
-          </button>))}
-        { respondido ? <NextButton /> : null }
-      </div>
+      answers.map((answer, index) => (
+        <button
+          type="button"
+          disabled={ disable }
+          key={ answer }
+          value={ answer }
+          data-testid={ correctAnswer === answers[index]
+            ? 'correct-answer' : `wrong-answer-${index}` }
+          onClick={ (e) => this.handleClick(e, correctAnswer) }
+          className={ correctAnswer === answers[index] ? correctColor : wrongColor }
+        >
+          {answer}
+        </button>))
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  addScoreOnStore: (payload) => dispatch(saveScoreOnStore(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(Answers);
 
 Answers.propTypes = {
   answers: PropTypes.array,
   correctAnswer: PropTypes.array,
 }.isRequired;
-
-export default Answers;
