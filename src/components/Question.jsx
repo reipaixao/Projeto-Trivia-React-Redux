@@ -1,40 +1,82 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-} from '../redux/actions/saveCurPlayerScore';
+import {} from '../redux/actions/saveCurPlayerScore';
 import { fetchQuestions } from '../redux/actions/fetchActions';
 import Answers from './Answers';
 
 class Question extends React.Component {
+  constructor() {
+    super();
+
+    this.state = { id: 0, activateOn: true };
+
+    this.nextQuestion = this.nextQuestion.bind(this);
+    this.disableButton = this.disableButton.bind(this);
+  }
+
   componentDidMount() {
     const { getQuestions, token } = this.props;
 
     getQuestions(token);
   }
 
+  disableButton() {
+    // essa função habilita o botão próximo quando a questão é selecionada
+    this.setState({ activateOn: false });
+  }
+
+  nextQuestion() {
+    // vai incrementando até a quantidade de perguntas, falta fazer a
+    // lógica de manda para a página de feedback
+    // e reseta o time de volta para 30 segundos
+    this.setState((id) => ({
+      id: id.id + 1,
+      activateOn: true,
+    }));
+  }
+
   renderQuestions(question) {
-    const answers = [question.correct_answer, ...question.incorrect_answers];
-    answers.sort();
+    const answers = [question.correct_answer, ...question.incorrect_answers].sort();
     return (
       <div>
         <p data-testid="question-category">{question.category}</p>
         <p data-testid="question-text">{question.question}</p>
         <p>{question.correct_answer}</p>
         <div>
-          <Answers answers={ answers } correctAnswer={ question.correct_answer } />
+          <Answers
+            answers={ answers }
+            correctAnswer={ question.correct_answer }
+            // a função foi enviada como prop
+            funcDisable={ this.disableButton }
+          />
         </div>
       </div>
     );
   }
 
+  // FALTA REMOVER O BUG DAS CORES E RESETAR O TIME QUANDO CLICAR EM PRÓXIMO
+
   render() {
     const { questions } = this.props;
-    if (questions.length === 0) return <p>Loading...</p>;
+    const { id, activateOn } = this.state;
     const questionMap = questions.map((question) => this.renderQuestions(question));
+
+    if (questions.length === 0) return <p>Loading...</p>;
     return (
       <div>
-        {questionMap[0]}
+        <div>
+          {questionMap[id]}
+        </div>
+        {/* { respondido ?  : null }  */}
+        <button
+          type="button"
+          disabled={ activateOn }
+          data-testid="btn-next"
+          onClick={ this.nextQuestion }
+        >
+          Próxima
+        </button>
       </div>
     );
   }
