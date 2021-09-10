@@ -6,7 +6,8 @@ import md5 from 'crypto-js/md5';
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.Gravatar = this.Gravatar.bind(this);
+
+    this.gravatar = this.gravatar.bind(this);
   }
 
   getPlayerDataFromLocalStorage() {
@@ -14,7 +15,7 @@ class Header extends Component {
     return getPlayerData;
   }
 
-  Gravatar() {
+  gravatar() {
     const { username, email } = this.getPlayerDataFromLocalStorage();
 
     const hashGerada = md5(email).toString();
@@ -25,7 +26,7 @@ class Header extends Component {
   }
 
   render() {
-    const { username, imgemPerfil } = this.Gravatar();
+    const { username, imgemPerfil } = this.gravatar();
     const { score, testID } = this.props;
     return (
       <div>

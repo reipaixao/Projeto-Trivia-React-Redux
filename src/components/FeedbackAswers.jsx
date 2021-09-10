@@ -9,6 +9,7 @@ class FeedbackAnswers extends React.Component {
     return (
       <div>
         <h3 data-testid="feedback-text">{renderAnswer(score)}</h3>
+        <h3 data-testid="feedback-total-question">{0}</h3>
       </div>);
   }
 }
