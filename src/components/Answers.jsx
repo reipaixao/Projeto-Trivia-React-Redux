@@ -13,11 +13,21 @@ class Answers extends React.Component {
       disable: false,
       correctColor: 'defaultColor',
       wrongColor: 'defaultColor',
+      currentCount: 30,
     };
 
     this.addScoreOnClick = this.addScoreOnClick.bind(this);
     this.addScoreInThisComponent = this.addScoreInThisComponent.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    const SECOND_1 = 1000;
+    this.intervalId = setInterval(this.timer.bind(this), SECOND_1);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   addScoreInThisComponent() {
@@ -33,6 +43,22 @@ class Answers extends React.Component {
     addScoreOnStore(score);
   }
 
+  timer() {
+    const { currentCount } = this.state;
+    if (currentCount < 1) {
+      this.setState({ disable: true });
+      clearInterval(this.intervalId);
+    } else {
+      this.setState({
+        currentCount: currentCount - 1,
+      });
+    }
+  }
+
+  pauseTime() {
+    clearInterval(this.intervalId);
+  }
+
   handleClick({ target }, correctAnswer) {
     if (target.value === correctAnswer) {
       this.addScoreOnClick();
@@ -42,25 +68,30 @@ class Answers extends React.Component {
       correctColor: 'correctColor',
       wrongColor: 'wrongColor',
     });
+    this.pauseTime();
   }
 
   render() {
     const { answers, correctAnswer } = this.props;
-    const { correctColor, wrongColor, disable } = this.state;
+    const { correctColor, wrongColor, disable, currentCount } = this.state;
     return (
-      answers.map((answer, index) => (
-        <button
-          type="button"
-          disabled={ disable }
-          key={ answer }
-          value={ answer }
-          data-testid={ correctAnswer === answers[index]
-            ? 'correct-answer' : `wrong-answer-${index}` }
-          onClick={ (e) => this.handleClick(e, correctAnswer) }
-          className={ correctAnswer === answers[index] ? correctColor : wrongColor }
-        >
-          {answer}
-        </button>))
+      <div>
+        {answers.map((answer, index) => (
+          <button
+            type="button"
+            disabled={ disable }
+            key={ answer }
+            value={ answer }
+            data-testid={ correctAnswer === answers[index]
+              ? 'correct-answer' : `wrong-answer-${index}` }
+            onClick={ (e) => this.handleClick(e, correctAnswer) }
+            className={ correctAnswer === answers[index] ? correctColor : wrongColor }
+          >
+            {answer}
+          </button>))}
+        { Number(currentCount) }
+        <NextButton />
+      </div>
     );
   }
 }

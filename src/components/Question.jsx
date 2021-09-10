@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import {
 } from '../redux/actions/saveCurPlayerScore';
 import { fetchQuestions } from '../redux/actions/fetchActions';
-import Clock from './timer';
 import Answers from './Answers';
-import Timer from './Timer';
 
 class Question extends React.Component {
   componentDidMount() {
@@ -37,7 +35,6 @@ class Question extends React.Component {
     return (
       <div>
         {questionMap[0]}
-        <Clock />
       </div>
     );
   }
